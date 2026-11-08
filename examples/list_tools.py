@@ -1,4 +1,4 @@
-"""List the tools of the voiceover & captions MCP server over stdio (no API key needed).
+"""List the tools of tts-mcp-server (text-to-speech & voiceover MCP server) over stdio (no API key needed).
 
     uv run --with mcp python examples/list_tools.py
 """
@@ -9,14 +9,14 @@ import shutil
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-GIT_SOURCE = "git+https://github.com/RTY2345RR/miragea-voice-mcp"
+PACKAGE = "tts-mcp-server"
 
 
 async def main() -> None:
-    if shutil.which("miragea-voice-mcp"):
-        params = StdioServerParameters(command="miragea-voice-mcp", args=[])
+    if shutil.which(PACKAGE):
+        params = StdioServerParameters(command=PACKAGE, args=[])
     else:
-        params = StdioServerParameters(command="uvx", args=["--from", GIT_SOURCE, "miragea-voice-mcp"])
+        params = StdioServerParameters(command="uvx", args=[PACKAGE])
     async with stdio_client(params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()

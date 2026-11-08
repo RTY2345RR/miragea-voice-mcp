@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="t d">
   <title id="t">Voiceover &amp; captions MCP server architecture</title>
-  <desc id="d">An AI agent (Claude Desktop, Claude Code, Cursor, OpenAI Codex, VS Code, Windsurf) calls the miragea-voice-mcp server over MCP stdio. The server validates input, adds idempotency keys, and calls the Miragea voice engine for text-to-speech, voice cloning and speech recognition, then writes an MP3 voiceover plus SRT and WebVTT captions for CapCut, Premiere Pro, DaVinci Resolve and YouTube.</desc>
+  <desc id="d">An AI agent (Claude Desktop, Claude Code, Cursor, OpenAI Codex, VS Code, Windsurf) calls the tts-mcp-server over MCP stdio. The server validates input, adds idempotency keys, and calls the Miragea voice engine for text-to-speech, voice cloning and speech recognition, then writes an MP3 voiceover plus SRT and WebVTT captions for CapCut, Premiere Pro, DaVinci Resolve and YouTube.</desc>
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
@@ -41,7 +41,7 @@
 
   <!-- server -->
   <rect x="365" y="70" width="400" height="290" rx="14" class="core"/>
-  <text x="565" y="105" text-anchor="middle" class="h">miragea-voice-mcp server</text>
+  <text x="565" y="105" text-anchor="middle" class="h">tts-mcp-server</text>
   <text x="565" y="128" text-anchor="middle" class="s">open source · MIT · Python</text>
   <text x="390" y="165" class="m">miragea_script_to_voiceover</text>
   <text x="390" y="187" class="m">miragea_text_to_speech</text>

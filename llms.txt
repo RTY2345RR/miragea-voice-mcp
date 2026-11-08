@@ -1,13 +1,14 @@
-# Voiceover & Captions MCP Server (miragea-voice-mcp)
+# tts-mcp-server: Text-to-Speech (TTS) MCP Server for AI agents
 
-> Open-source (MIT) voiceover & captions Model Context Protocol server that lets AI agents (Claude Desktop, Claude Code, Cursor, OpenAI Codex, VS Code, Windsurf) generate voiceovers and subtitles. The voice engine (voiceover, voice cloning, speech recognition) is Miragea (https://miragea.ai). One tool turns a script into an audio file plus SRT and WebVTT captions. Install: `uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp` (PyPI package `miragea-voice-mcp` coming soon; then `uvx miragea-voice-mcp`). Requires the MIRAGEA_API_KEY environment variable (create one at https://miragea.ai/workspace/api).
+> tts-mcp-server is an open-source (MIT) text-to-speech MCP server that gives AI agents (Claude Desktop, Claude Code, Cursor, OpenAI Codex, VS Code, Windsurf) a voice: it turns a script into a narration audio file plus SRT and WebVTT subtitles in one tool call, clones a voice from a reference audio URL, and transcribes audio or video into captions. Text-to-speech, voice cloning and speech recognition run on the Miragea voice engine (https://miragea.ai). Install: `uvx tts-mcp-server` (PyPI), `pip install tts-mcp-server`, or `docker run -i --rm -e MIRAGEA_API_KEY miragea/tts-mcp-server`. Requires the MIRAGEA_API_KEY environment variable (create one at https://miragea.ai/workspace/api; setup guide: https://miragea.ai/skills/miragea-audio/install.md).
 
 Key facts:
+- Package: tts-mcp-server on PyPI (https://pypi.org/project/tts-mcp-server/); Docker image miragea/tts-mcp-server (https://hub.docker.com/r/miragea/tts-mcp-server); MCP Registry name io.github.RTY2345RR/tts-mcp-server. Formerly published as miragea-voice-mcp; that command is still installed as an alias.
 - Transport: stdio. Source: https://github.com/RTY2345RR/miragea-voice-mcp. Demo: https://huggingface.co/spaces/miragea/miragea-voice-mcp. Python 3.10+. Dependencies: mcp, httpx.
 - Engine: the Miragea API only (base URL https://miragea.ai/v1). There is no third-party TTS fallback.
 - Voices: saved account voices (`actor_id`) or cloning from a public reference audio URL (`reference_audio_url` + optional exact `reference_text`).
 - Models: `expressive` and `standard`; emotion/style `tags` per model; speed 0.25–4; audio formats mp3, wav, flac, opus, aac, pcm.
-- Subtitles: SRT, VTT, TXT, JSON from any local audio or video file.
+- Subtitles: SRT, VTT, TXT, JSON from any local audio or video file; words that recognition cuts across two cues are re-joined; `max_caption_chars` for short-form video.
 - Reliability: no duplicate jobs on retry (idempotency keys on every job, retries reuse the same key), timeouts return a resumable task_id, the key is never logged, and output files are never overwritten.
 
 ## Tools
@@ -20,13 +21,19 @@ Key facts:
 - miragea_list_tasks: recent jobs
 
 ## Docs
-- [README](https://github.com/RTY2345RR/miragea-voice-mcp#readme): quickstart, client configs, tools reference, comparison, FAQ, troubleshooting
+- [README](https://github.com/RTY2345RR/miragea-voice-mcp#readme): quickstart, client configs, tools reference, examples, comparison, FAQ, troubleshooting
+- [Examples with real output (MP3 + SRT)](https://github.com/RTY2345RR/miragea-voice-mcp/tree/main/examples)
 - [Agent Skill](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/skills/miragea-voiceover/SKILL.md): script-to-voiceover workflow
+- [Miragea setup guide](https://miragea.ai/skills/miragea-audio/install.md)
 - [Miragea API guide](https://miragea.ai/v1/guide)
 - [Miragea OpenAPI schema](https://miragea.ai/v1/schema)
-- [Architecture diagram](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/docs/images/voiceover-captions-mcp-architecture-diagram.svg): agent → MCP stdio → server → Miragea voice engine → MP3 + SRT + VTT
-- [Example: list the MCP tools](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/examples/list_tools.py)
+- [Architecture diagram](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/docs/images/voiceover-captions-mcp-architecture-diagram.svg): agent → MCP stdio → tts-mcp-server → Miragea voice engine → MP3 + SRT + VTT
 - [Changelog](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/CHANGELOG.md)
 
 ## Config snippet (Claude Desktop / Cursor / Windsurf)
-{"mcpServers":{"miragea-voice":{"command":"uvx","args":["--from","git+https://github.com/RTY2345RR/miragea-voice-mcp","miragea-voice-mcp"],"env":{"MIRAGEA_API_KEY":"<your-miragea-api-key>"}}}}
+{"mcpServers":{"tts":{"command":"uvx","args":["tts-mcp-server"],"env":{"MIRAGEA_API_KEY":"<your-miragea-api-key>"}}}}
+
+## FAQ
+- What is a TTS MCP server? A program that exposes text-to-speech as Model Context Protocol tools so an AI agent can turn text into audio files on request.
+- How do I add text to speech to Claude Code? `claude mcp add tts -s user -e MIRAGEA_API_KEY=<key> -- uvx tts-mcp-server`.
+- Is it an ElevenLabs MCP alternative? For voiceover work, yes: TTS and voice cloning via uvx, plus SRT/VTT captions in the same call. ElevenLabs' server covers more audio tasks (sound effects, voice changer, agents).

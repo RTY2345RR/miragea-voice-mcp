@@ -50,7 +50,7 @@ async def test_capabilities_summary_and_headers(fake):
     assert str(req.url) == "https://miragea.ai/v1/capabilities"
     assert req.headers["authorization"] == f"Bearer {API_KEY}"
     ua = req.headers["user-agent"]
-    assert ua.startswith("miragea-voice-mcp/") and "urllib" not in ua.lower()
+    assert ua.startswith("tts-mcp-server/") and "urllib" not in ua.lower()
 
 
 async def test_capabilities_raw_optional(fake):

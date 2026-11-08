@@ -30,17 +30,17 @@ EXPECTED_TOOLS = {
 @pytest.mark.parametrize("client", CLIENTS)
 def test_config_snippets_are_valid(client):
     snippet = config_snippet(client)
-    assert "miragea-voice-mcp" in snippet and "MIRAGEA_API_KEY" in snippet
+    assert "tts-mcp-server" in snippet and "MIRAGEA_API_KEY" in snippet
     if client in ("claude-desktop", "cursor", "windsurf", "vscode"):
         json.loads(snippet)
     if client == "codex" and tomllib is not None:
         data = tomllib.loads(snippet)
-        assert data["mcp_servers"]["miragea-voice"]["args"] == UVX_ARGS
+        assert data["mcp_servers"]["tts"]["args"] == UVX_ARGS
 
 
 def test_print_config(capsys):
     assert main(["--print-config", "cursor"]) == 0
-    assert json.loads(capsys.readouterr().out)["mcpServers"]["miragea-voice"]["command"] == "uvx"
+    assert json.loads(capsys.readouterr().out)["mcpServers"]["tts"]["command"] == "uvx"
 
 
 def test_check_without_key(monkeypatch, capsys):
@@ -74,7 +74,7 @@ def test_stdio_handshake_lists_tools_without_key():
         _rpc(proc, {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {
             "protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "pytest", "version": "0"}}})
         init = _read(proc, 1)
-        assert init["result"]["serverInfo"]["name"] == "miragea-voice"
+        assert init["result"]["serverInfo"]["name"] == "tts-mcp-server"
         assert "miragea_get_capabilities" in init["result"].get("instructions", "")
         _rpc(proc, {"jsonrpc": "2.0", "method": "notifications/initialized"})
         _rpc(proc, {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}})

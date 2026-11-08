@@ -1,20 +1,20 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.RTY2345RR/miragea-voice-mcp",
-  "title": "Voiceover & Captions",
-  "description": "Voiceover & captions for AI agents: script to narration + SRT/VTT subtitles, voice cloning.",
+  "name": "io.github.RTY2345RR/tts-mcp-server",
+  "title": "TTS MCP Server",
+  "description": "Text-to-speech, AI voiceover, voice cloning and SRT/VTT subtitles for AI agents.",
   "websiteUrl": "https://miragea.ai",
   "repository": {
     "url": "https://github.com/RTY2345RR/miragea-voice-mcp",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
-      "identifier": "miragea-voice-mcp",
-      "version": "0.1.0",
+      "identifier": "tts-mcp-server",
+      "version": "0.1.1",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
@@ -32,6 +32,36 @@
           "description": "Folder for generated audio and subtitles (default ~/Miragea)",
           "isRequired": false,
           "format": "filepath"
+        },
+        {
+          "name": "MIRAGEA_BASE_URL",
+          "description": "API root including /v1 (default https://miragea.ai/v1)",
+          "isRequired": false,
+          "format": "string",
+          "default": "https://miragea.ai/v1"
+        },
+        {
+          "name": "MIRAGEA_WAIT_TIMEOUT",
+          "description": "Max seconds to wait for a job before returning its task_id (default 600)",
+          "isRequired": false,
+          "format": "number",
+          "default": "600"
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "docker.io/miragea/tts-mcp-server:0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "MIRAGEA_API_KEY",
+          "description": "Miragea API key from https://miragea.ai/workspace/api",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
         },
         {
           "name": "MIRAGEA_BASE_URL",

@@ -1,8 +1,8 @@
-"""Command line entry point: `miragea-voice-mcp` runs the stdio server.
+"""Command line entry point: `tts-mcp-server` (alias `miragea-voice-mcp`) runs the stdio server.
 
 Extras:
-  miragea-voice-mcp --check                 verify the key and reach /capabilities (read-only)
-  miragea-voice-mcp --print-config cursor   print a ready-to-paste client config
+  tts-mcp-server --check                 verify the key and reach /capabilities (read-only)
+  tts-mcp-server --print-config cursor   print a ready-to-paste client config
 """
 
 from __future__ import annotations
@@ -16,25 +16,25 @@ from . import __version__
 
 CLIENTS = ("claude-desktop", "cursor", "claude-code", "codex", "vscode", "windsurf")
 KEY_PLACEHOLDER = "<your-miragea-api-key>"
-# Installed from GitHub until the PyPI release is live; then this becomes ["miragea-voice-mcp"].
-GIT_SOURCE = "git+https://github.com/RTY2345RR/miragea-voice-mcp"
-UVX_ARGS = ["--from", GIT_SOURCE, "miragea-voice-mcp"]
+PACKAGE = "tts-mcp-server"
+SERVER_KEY = "tts"
+UVX_ARGS = [PACKAGE]
 
 
 def config_snippet(client: str) -> str:
     server = {"command": "uvx", "args": list(UVX_ARGS), "env": {"MIRAGEA_API_KEY": KEY_PLACEHOLDER}}
     if client in ("claude-desktop", "cursor", "windsurf"):
-        return json.dumps({"mcpServers": {"miragea-voice": server}}, indent=2)
+        return json.dumps({"mcpServers": {SERVER_KEY: server}}, indent=2)
     if client == "vscode":
         return json.dumps(
-            {"servers": {"miragea-voice": {"type": "stdio", **server}}},
+            {"servers": {SERVER_KEY: {"type": "stdio", **server}}},
             indent=2,
         )
     if client == "claude-code":
-        return f"claude mcp add miragea-voice -s user -e MIRAGEA_API_KEY={KEY_PLACEHOLDER} -- uvx --from {GIT_SOURCE} miragea-voice-mcp"
+        return f"claude mcp add {SERVER_KEY} -s user -e MIRAGEA_API_KEY={KEY_PLACEHOLDER} -- uvx {PACKAGE}"
     if client == "codex":
         return (
-            "[mcp_servers.miragea-voice]\n"
+            f"[mcp_servers.{SERVER_KEY}]\n"
             'command = "uvx"\n'
             f'args = {json.dumps(UVX_ARGS)}\n'
             "tool_timeout_sec = 900\n"
@@ -76,8 +76,8 @@ async def _check() -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="miragea-voice-mcp",
-        description="MCP server for AI voiceovers and subtitles with the Miragea API (stdio).",
+        prog="tts-mcp-server",
+        description="TTS MCP server: text-to-speech, voiceover, voice cloning and subtitles for AI agents (stdio, Miragea voice engine).",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--check", action="store_true", help="verify MIRAGEA_API_KEY and API reachability (read-only, creates no job)")

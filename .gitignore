@@ -12,3 +12,8 @@ build/
 *.wav
 *.srt
 *.vtt
+# real example outputs are committed on purpose
+!examples/**/*.mp3
+!examples/**/*.wav
+!examples/**/*.srt
+!examples/**/*.vtt

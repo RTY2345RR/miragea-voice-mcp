@@ -30,28 +30,28 @@ CLI: `gh repo edit RTY2345RR/miragea-voice-mcp --description "…" --homepage ht
 
 Also: enable Discussions, upload a social preview image (1280×640) showing the script → mp3 + srt flow, and pin the repo on the profile.
 
-## 2. PyPI (not live yet; `uvx miragea-voice-mcp` depends on this)
+## 2. PyPI (`tts-mcp-server`)
 
 Recommended: **trusted publishing** (no token stored anywhere).
 
 1. Sign in at pypi.org → *Your account → Publishing → Add a new pending publisher*:
-   project `miragea-voice-mcp`, owner `RTY2345RR`, repo `miragea-voice-mcp`, workflow `publish.yml`, environment `pypi`.
+   project `tts-mcp-server`, owner `RTY2345RR`, repo `miragea-voice-mcp`, workflow `publish.yml`, environment `pypi`.
 2. On GitHub: *Settings → Environments → New environment* named `pypi`.
 3. Run *Actions → Publish → Run workflow* (or add a `release: published` trigger to `.github/workflows/publish.yml`). It builds the package, uploads it to PyPI, then publishes to the MCP Registry (step 3).
 
 Manual alternative:
 
 ```bash
-uv build                 # dist/miragea_voice_mcp-0.1.0-py3-none-any.whl + .tar.gz
+uv build                 # dist/tts_mcp_server-0.1.1-py3-none-any.whl + .tar.gz
 uvx twine check dist/*
 uvx twine upload dist/*  # needs a PyPI API token
 ```
 
-Verify: `uvx miragea-voice-mcp --version` on a clean machine.
+Verify: `uvx tts-mcp-server --version` on a clean machine.
 
 ## 3. Official MCP Registry (registry.modelcontextprotocol.io)
 
-The registry checks that the PyPI README contains `<!-- mcp-name: io.github.RTY2345RR/miragea-voice-mcp -->` (already in `README.md`), so publish to PyPI first.
+The registry checks that the PyPI README contains `<!-- mcp-name: io.github.RTY2345RR/tts-mcp-server -->` (already in `README.md`), so publish to PyPI first.
 
 ```bash
 # install the publisher CLI (macOS: brew install mcp-publisher)
@@ -61,7 +61,7 @@ sudo mv mcp-publisher /usr/local/bin/
 cd miragea-voice-mcp
 mcp-publisher login github        # sign in as GitHub user `RTY2345RR` (io.github.RTY2345RR namespace)
 mcp-publisher publish             # reads ./server.json
-curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.RTY2345RR/miragea-voice-mcp"
+curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.RTY2345RR/tts-mcp-server"
 ```
 
 CI does the same with `mcp-publisher login github-oidc` after each release. For every new version, bump `version` in `pyproject.toml`, `src/miragea_voice_mcp/__init__.py` and both places in `server.json` (the tests enforce this).
@@ -115,7 +115,7 @@ In `README.md`, under **🎧 Text-to-Speech**, insert this line in alphabetical 
 ```bash
 git commit -am "Add RTY2345RR/miragea-voice-mcp to Text-to-Speech"
 git push -u origin add-miragea-voice-mcp
-gh pr create --repo punkpeye/awesome-mcp-servers --title "Add miragea-voice-mcp (voiceover + subtitles)" \
+gh pr create --repo punkpeye/awesome-mcp-servers --title "Add tts-mcp-server (text-to-speech, voiceover + subtitles)" \
   --body "Voiceover & captions MCP server (Python, stdio, MIT, Miragea voice engine). Script → voiceover + SRT/VTT captions, voice cloning, transcription. Listed on Glama."
 ```
 
@@ -138,6 +138,6 @@ python -c "import json;d=json.load(open('server.json'));assert len(d['descriptio
 Then optionally run a real smoke test with a key, using a short test line:
 
 ```bash
-MIRAGEA_API_KEY=… uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp --check   # read-only
+MIRAGEA_API_KEY=… uvx tts-mcp-server --check   # read-only
 # in your MCP client: "Use miragea_text_to_speech to say 'Hi' with my first voice"
 ```

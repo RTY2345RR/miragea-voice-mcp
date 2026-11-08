@@ -43,7 +43,7 @@ Workflow:
 Do not resubmit a job after a timeout (that would create a duplicate job); resume it with miragea_get_task.
 """
 
-mcp = _Server(name="miragea-voice", instructions=INSTRUCTIONS)
+mcp = _Server(name="tts-mcp-server", instructions=INSTRUCTIONS)
 
 # Test hooks: tests swap in an httpx.MockTransport and a no-op sleep.
 _TRANSPORT: Optional[httpx.AsyncBaseTransport] = None
@@ -280,10 +280,10 @@ def _write_captions(
     for fmt in dict.fromkeys(f.lower() for f in formats):
         if fmt not in CAPTION_FORMATS:
             raise ToolError(f"Unsupported caption format {fmt!r}; use {', '.join(CAPTION_FORMATS)}.")
-        if native_ok and fmt in ("srt", "txt") and isinstance(result.get(fmt), str) and result.get(fmt).strip():
+        # SRT, VTT and JSON are always rendered from the cleaned segments (words cut
+        # across cues by recognition are re-joined); plain text can use the native one.
+        if native_ok and fmt == "txt" and isinstance(result.get(fmt), str) and result.get(fmt).strip():
             text = result[fmt]
-        elif fmt == "json" and native_ok:
-            text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
         else:
             if not segments:
                 raise ToolError("Recognition returned no timed segments, so captions cannot be built.")
@@ -654,5 +654,5 @@ async def miragea_list_tasks(limit: int = 20) -> dict[str, Any]:
 
 def run() -> None:
     logging.basicConfig(stream=sys.stderr, level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
-    log.info("miragea-voice-mcp %s starting (stdio)", __version__)
+    log.info("tts-mcp-server %s starting (stdio)", __version__)
     mcp.run("stdio")

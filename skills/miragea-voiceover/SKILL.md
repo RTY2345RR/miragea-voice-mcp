@@ -3,8 +3,8 @@ name: miragea-voiceover
 description: Turn a video script into a finished voiceover audio file plus SRT/VTT captions using the voiceover & captions MCP tools (Miragea voice engine). Use when the user asks for a voiceover, narration, AI voice, dubbing a script, reading text aloud to a file, or captions/subtitles for a YouTube video, Short, TikTok, Reel, product video, ad, explainer, course lesson or movie recap.
 license: MIT
 metadata:
-  version: "0.1.0"
-  requires: "miragea-voice-mcp MCP server (uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp) and a MIRAGEA_API_KEY"
+  version: "0.1.1"
+  requires: "tts-mcp-server MCP server (uvx tts-mcp-server) and a MIRAGEA_API_KEY"
 ---
 
 # Voiceover: script → audio + captions
@@ -13,7 +13,7 @@ Produce a broadcast-ready voiceover and matching captions with the `miragea_*` M
 
 ## 0. Preconditions
 
-- The `miragea_*` tools must be available. If they are not, tell the user to install the server: `claude mcp add miragea-voice -s user -e MIRAGEA_API_KEY=<key> -- uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp` (other clients: `uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp --print-config <client>`). Keys are created at https://miragea.ai/workspace/api.
+- The `miragea_*` tools must be available. If they are not, tell the user to install the server: `claude mcp add tts -s user -e MIRAGEA_API_KEY=<key> -- uvx tts-mcp-server` (other clients: `uvx tts-mcp-server --print-config <client>`). Keys are created at https://miragea.ai/workspace/api (setup guide: https://miragea.ai/skills/miragea-audio/install.md).
 - If a tool says `MIRAGEA_API_KEY is not set`, ask the user to put the key in the MCP config `env` block. Never ask them to paste the key into chat, and never print it.
 
 ## 1. Gather the brief (ask only what is missing)

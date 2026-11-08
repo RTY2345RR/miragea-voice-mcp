@@ -59,7 +59,72 @@ def segments_from_result(result: dict[str, Any]) -> list[Segment]:
                 out.append(Segment(start, max(end, start), text))
     if not out and isinstance(result.get("srt"), str):
         out = parse_srt(result["srt"])
+    full_text = result.get("text") or result.get("txt")
+    if isinstance(full_text, str) and full_text.strip():
+        out = fix_word_splits(out, full_text)
     return out
+
+
+def _is_word_char(ch: str) -> bool:
+    return ch.isalnum() and not re.match(rf"[{_CJK}]", ch)
+
+
+def fix_word_splits(segments: list[Segment], full_text: str) -> list[Segment]:
+    """Re-join words that recognition cut across two cues ("an" | "d bruised").
+
+    Some recognizers chunk the transcript every N characters, so a cue can end
+    mid-word. The full transcript tells us where the real spaces are: we walk
+    the cues along it and, wherever a boundary falls inside a word, move the
+    smaller fragment to the cue holding the rest of the word, shifting the
+    boundary time by the share of characters moved. Returns the input unchanged
+    if the cues cannot be matched to the transcript.
+    """
+    if len(segments) < 2:
+        return list(segments)
+    text = full_text
+    pos = 0
+    spans: list[tuple[int, int]] = []
+    for seg in segments:
+        body = seg.text.strip()
+        while pos < len(text) and text[pos].isspace():
+            pos += 1
+        if text[pos : pos + len(body)] != body:
+            return list(segments)
+        spans.append((pos, pos + len(body)))
+        pos += len(body)
+    segs = [Segment(s.start, s.end, s.text.strip()) for s in segments]
+    for i in range(len(segs) - 1):
+        a, b = segs[i], segs[i + 1]
+        end_a = spans[i][1]
+        if not (0 < end_a < len(text) and spans[i + 1][0] == end_a):
+            continue
+        if b.text and not any(_is_word_char(c) for c in b.text) and len(b.text) <= 3:
+            a.text, b.text = a.text + b.text, ""  # stray punctuation cue: attach it
+            a.end = max(a.end, b.end)
+            b.start = b.end = a.end
+            continue
+        if not (_is_word_char(text[end_a - 1]) and _is_word_char(text[end_a])):
+            continue
+        head = re.search(r"[^\s]*$", a.text).group(0)  # tail fragment of a
+        tail = re.match(r"[^\s]*", b.text).group(0)  # head fragment of b
+        if not head or not tail:
+            continue
+        a_rest, b_rest = a.text[: len(a.text) - len(head)].rstrip(), b.text[len(tail) :].lstrip()
+        if len(head) <= len(tail) and a_rest:
+            moved, a.text, b.text = head, a_rest, head + b.text
+            share = len(moved) / max(1, len(a_rest) + len(moved))
+            boundary = a.end - (a.end - a.start) * share
+        elif b_rest:
+            moved, a.text, b.text = tail, a.text + tail, b_rest
+            share = len(moved) / max(1, len(b_rest) + len(moved))
+            boundary = b.start + (b.end - b.start) * share
+        else:  # b is only the end of a's last word: merge it into a
+            a.text, b.text = a.text + tail, ""
+            a.end = max(a.end, b.end)
+            b.start = b.end = a.end
+            continue
+        a.end = b.start = max(a.start, min(boundary, b.end))
+    return [s for s in segs if s.text]
 
 
 def parse_srt(text: str) -> list[Segment]:

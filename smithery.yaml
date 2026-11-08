@@ -18,7 +18,7 @@ startCommand:
         description: Max seconds to wait for a job before returning its task_id
   commandFunction: |-
     (config) => ({
-      command: 'miragea-voice-mcp',
+      command: 'tts-mcp-server',
       args: [],
       env: Object.assign(
         { MIRAGEA_API_KEY: config.mirageaApiKey },

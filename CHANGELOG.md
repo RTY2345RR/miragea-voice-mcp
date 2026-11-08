@@ -6,6 +6,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-08
+
+### Changed
+- Published on PyPI and Docker Hub as **`tts-mcp-server`** (`uvx tts-mcp-server`, `docker run -i --rm -e MIRAGEA_API_KEY miragea/tts-mcp-server`). The `miragea-voice-mcp` command stays installed as an alias, so existing configs keep working.
+- Client snippets now use the server key `tts` and the PyPI package instead of a git URL.
+- MCP Registry name is `io.github.RTY2345RR/tts-mcp-server` (PyPI + OCI packages).
+
+### Fixed
+- Subtitles: words that speech recognition cut across two cues ("an" | "d bruised") are re-joined at word boundaries, and stray punctuation-only cues are merged. SRT, VTT and JSON are now always rendered from the cleaned segments.
+
+### Added
+- `examples/` with real outputs: YouTube voiceover with SRT, two-voice dialogue, and transcription to captions.
+
 ## [0.1.0] - 2026-11-08
 
 ### Added
@@ -23,5 +36,6 @@ All notable changes to this project are documented here. The format follows
 - Companion Agent Skill `skills/miragea-voiceover`.
 - Registry metadata: `server.json`, `smithery.yaml`, `glama.json`, `llms.txt`.
 
-[Unreleased]: https://github.com/RTY2345RR/miragea-voice-mcp/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/RTY2345RR/miragea-voice-mcp/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/RTY2345RR/miragea-voice-mcp/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/RTY2345RR/miragea-voice-mcp/releases/tag/v0.1.0

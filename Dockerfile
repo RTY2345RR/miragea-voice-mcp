@@ -6,4 +6,5 @@ COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
 RUN pip install --no-cache-dir . && mkdir -p /data
 VOLUME ["/data"]
-ENTRYPOINT ["miragea-voice-mcp"]
+LABEL io.modelcontextprotocol.server.name="io.github.RTY2345RR/tts-mcp-server"
+ENTRYPOINT ["tts-mcp-server"]

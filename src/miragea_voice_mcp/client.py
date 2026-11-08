@@ -28,7 +28,7 @@ from .config import API_KEY_PAGE, MISSING_KEY_MESSAGE, Settings
 
 # Cloudflare in front of miragea.ai rejects some default library user agents
 # (e.g. Python-urllib gets HTTP 403), so always identify as a normal client.
-USER_AGENT = f"miragea-voice-mcp/{__version__} (+https://github.com/RTY2345RR/miragea-voice-mcp) python-httpx"
+USER_AGENT = f"tts-mcp-server/{__version__} (+https://github.com/RTY2345RR/miragea-voice-mcp) python-httpx"
 
 TERMINAL_STATES = ("succeeded", "failed")
 RETRYABLE_HTTP = (502, 503, 504)
