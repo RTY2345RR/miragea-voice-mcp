@@ -24,6 +24,8 @@ Key facts:
 - [Agent Skill](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/skills/miragea-voiceover/SKILL.md): script-to-voiceover workflow
 - [Miragea API guide](https://miragea.ai/v1/guide)
 - [Miragea OpenAPI schema](https://miragea.ai/v1/schema)
+- [Architecture diagram](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/docs/images/voiceover-captions-mcp-architecture-diagram.svg): agent → MCP stdio → server → Miragea voice engine → MP3 + SRT + VTT
+- [Example: list the MCP tools](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/examples/list_tools.py)
 - [Changelog](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/CHANGELOG.md)
 
 ## Config snippet (Claude Desktop / Cursor / Windsurf)

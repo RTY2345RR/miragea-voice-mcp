@@ -15,6 +15,8 @@
 
 <!-- mcp-name: io.github.RTY2345RR/miragea-voice-mcp -->
 
+![Terminal screenshot: installing the voiceover and captions MCP server with uvx from GitHub, printing the Claude Code config, and listing its 7 MCP tools (text-to-speech, voice cloning, transcription to SRT/VTT)](docs/images/voiceover-captions-mcp-server-terminal-demo.svg)
+
 ```text
 You:    Turn script.txt into a calm voiceover with captions for a YouTube Short.
 Agent:  miragea_script_to_voiceover(script_file="script.txt", actor_id="…", tags=["calm"])
@@ -25,6 +27,7 @@ Agent:  miragea_script_to_voiceover(script_file="script.txt", actor_id="…", ta
 
 ## Contents
 
+- [How it works](#how-it-works)
 - [Features](#features)
 - [Quickstart (60 seconds)](#quickstart-60-seconds)
 - [Client setup: Claude Desktop, Claude Code, Cursor, Codex, VS Code, Windsurf](#client-setup)
@@ -37,6 +40,15 @@ Agent:  miragea_script_to_voiceover(script_file="script.txt", actor_id="…", ta
 - [Agent Skill](#companion-agent-skill)
 - [Development](#development)
 - [Links](#links)
+
+## How it works
+
+![Architecture diagram of the voiceover and captions MCP server: an AI agent such as Claude, Cursor or Codex calls miragea-voice-mcp over MCP stdio; the server calls the Miragea voice engine for text-to-speech, voice cloning and speech recognition, and writes MP3 audio plus SRT and WebVTT captions](docs/images/voiceover-captions-mcp-architecture-diagram.svg)
+
+1. Your AI agent (Claude Desktop, Claude Code, Cursor, OpenAI Codex, VS Code or Windsurf) calls a tool such as `miragea_script_to_voiceover` over the Model Context Protocol (stdio).
+2. The server checks the request against the live voice-engine capabilities (models, emotion tags, formats, text length) and adds an idempotency key.
+3. The [Miragea](https://miragea.ai) voice engine generates the narration (or clones a voice from your reference clip), then runs speech recognition on the new audio for timestamps.
+4. The server writes `.mp3` + `.srt` + `.vtt` side by side, with captions that keep your exact script wording, ready to import into your video editor.
 
 ## Features
 
