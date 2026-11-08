@@ -200,7 +200,7 @@ Ask the agent to run `miragea_transcribe` on the file (for example, *"make SRT a
 Yes. `miragea_script_to_voiceover` returns the audio plus SRT/VTT captions timed to that audio, with cues capped at 42 characters by default for vertical video. Import both into CapCut, Premiere Pro or DaVinci Resolve.
 
 ### Does it support voice cloning?
-Yes. Pass `reference_audio_url` (a public http(s) link to a clean sample) and, ideally, `reference_text` with the exact words spoken in it. Supplying the exact text uses the lower expressive rate; omitting it makes Miragea auto-recognize it at a higher rate. Only clone voices you have the right to use.
+Yes. Pass `reference_audio_url` (a public http(s) link to a clean sample) and, ideally, `reference_text` with the exact words spoken in it. Supplying the exact text gives the most faithful clone; if you omit it, Miragea recognizes it automatically. Only clone voices you have the right to use.
 
 ### Does it work with Cursor, Claude Code and OpenAI Codex?
 Yes, with any MCP client that supports stdio servers. Run `uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp --print-config cursor` (or `claude-code`, `codex`, `vscode`, `windsurf`, `claude-desktop`) for a ready snippet.
