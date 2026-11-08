@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "miragea-voice-mcp"
+version = "0.1.0"
+description = "Voiceover & captions MCP server for AI agents: script to narration + SRT/VTT subtitles, voice cloning (Miragea voice engine)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Miragea" }]
+keywords = [
+  "mcp", "mcp-server", "model-context-protocol", "text-to-speech", "tts", "voiceover",
+  "voice-cloning", "subtitles", "srt", "vtt", "captions", "speech-to-text", "transcription",
+  "ai-voice", "claude", "cursor", "codex", "video-creator", "youtube-shorts", "miragea",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Multimedia :: Sound/Audio :: Speech",
+  "Topic :: Multimedia :: Video",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "mcp>=1.9,<3",
+  "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "anyio>=4", "build", "twine"]
+
+[project.urls]
+Homepage = "https://github.com/RTY2345RR/miragea-voice-mcp"
+Demo = "https://huggingface.co/spaces/miragea/miragea-voice-mcp"
+"Voice engine" = "https://miragea.ai"
+Repository = "https://github.com/RTY2345RR/miragea-voice-mcp"
+Documentation = "https://github.com/RTY2345RR/miragea-voice-mcp#readme"
+Issues = "https://github.com/RTY2345RR/miragea-voice-mcp/issues"
+Changelog = "https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/CHANGELOG.md"
+"API keys" = "https://miragea.ai/workspace/api"
+
+[project.scripts]
+miragea-voice-mcp = "miragea_voice_mcp.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/miragea_voice_mcp"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/", "tests/", "skills/", "README.md", "LICENSE", "CHANGELOG.md", "llms.txt",
+  "server.json", "smithery.yaml", "glama.json", "Dockerfile", "pyproject.toml", "PUBLISHING.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

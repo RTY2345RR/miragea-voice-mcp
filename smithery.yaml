@@ -1,0 +1,30 @@
+# Smithery configuration: https://smithery.ai/docs/build/project-config/smithery-yaml
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - mirageaApiKey
+    properties:
+      mirageaApiKey:
+        type: string
+        description: Miragea API key from https://miragea.ai/workspace/api
+      outputDir:
+        type: string
+        description: Folder for generated audio and subtitles (default ~/Miragea)
+      waitTimeout:
+        type: number
+        default: 600
+        description: Max seconds to wait for a job before returning its task_id
+  commandFunction: |-
+    (config) => ({
+      command: 'miragea-voice-mcp',
+      args: [],
+      env: Object.assign(
+        { MIRAGEA_API_KEY: config.mirageaApiKey },
+        config.outputDir ? { MIRAGEA_OUTPUT_DIR: config.outputDir } : {},
+        config.waitTimeout ? { MIRAGEA_WAIT_TIMEOUT: String(config.waitTimeout) } : {}
+      )
+    })
+  exampleConfig:
+    mirageaApiKey: your-miragea-api-key

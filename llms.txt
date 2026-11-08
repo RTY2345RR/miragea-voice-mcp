@@ -1,0 +1,30 @@
+# Voiceover & Captions MCP Server (miragea-voice-mcp)
+
+> Open-source (MIT) voiceover & captions Model Context Protocol server that lets AI agents (Claude Desktop, Claude Code, Cursor, OpenAI Codex, VS Code, Windsurf) generate voiceovers and subtitles. The voice engine (voiceover, voice cloning, speech recognition) is Miragea (https://miragea.ai). One tool turns a script into an audio file plus SRT and WebVTT captions. Install: `uvx --from git+https://github.com/RTY2345RR/miragea-voice-mcp miragea-voice-mcp` (PyPI package `miragea-voice-mcp` coming soon; then `uvx miragea-voice-mcp`). Requires the MIRAGEA_API_KEY environment variable (create one at https://miragea.ai/workspace/api).
+
+Key facts:
+- Transport: stdio. Source: https://github.com/RTY2345RR/miragea-voice-mcp. Demo: https://huggingface.co/spaces/miragea/miragea-voice-mcp. Python 3.10+. Dependencies: mcp, httpx.
+- Engine: the Miragea API only (base URL https://miragea.ai/v1). There is no third-party TTS fallback.
+- Voices: saved account voices (`actor_id`) or cloning from a public reference audio URL (`reference_audio_url` + optional exact `reference_text`).
+- Models: `expressive` and `standard`; emotion/style `tags` per model; speed 0.25–4; audio formats mp3, wav, flac, opus, aac, pcm.
+- Subtitles: SRT, VTT, TXT, JSON from any local audio or video file.
+- Reliability: no duplicate jobs on retry (idempotency keys on every job, retries reuse the same key), timeouts return a resumable task_id, the key is never logged, and output files are never overwritten.
+
+## Tools
+- miragea_get_capabilities: live models, tags, formats, limits (read-only)
+- miragea_list_voices: account voices, with search (read-only)
+- miragea_text_to_speech: text → audio file
+- miragea_transcribe: audio/video → SRT/VTT/TXT/JSON
+- miragea_script_to_voiceover: script → audio + captions with exact script wording
+- miragea_get_task: resume or download a job by task_id
+- miragea_list_tasks: recent jobs
+
+## Docs
+- [README](https://github.com/RTY2345RR/miragea-voice-mcp#readme): quickstart, client configs, tools reference, comparison, FAQ, troubleshooting
+- [Agent Skill](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/skills/miragea-voiceover/SKILL.md): script-to-voiceover workflow
+- [Miragea API guide](https://miragea.ai/v1/guide)
+- [Miragea OpenAPI schema](https://miragea.ai/v1/schema)
+- [Changelog](https://github.com/RTY2345RR/miragea-voice-mcp/blob/main/CHANGELOG.md)
+
+## Config snippet (Claude Desktop / Cursor / Windsurf)
+{"mcpServers":{"miragea-voice":{"command":"uvx","args":["--from","git+https://github.com/RTY2345RR/miragea-voice-mcp","miragea-voice-mcp"],"env":{"MIRAGEA_API_KEY":"<your-miragea-api-key>"}}}}
